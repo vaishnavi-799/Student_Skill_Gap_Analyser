@@ -78,10 +78,3 @@ Open `http://localhost:8501` in your browser.
 
 ---
 
-## Team
-| Member | Responsibility |
-|--------|---------------|
-| Member 1 | ML Core (`ml/`) |
-| Member 2 | Database & Supabase (`database/`, `config/`) |
-| Member 3 | Streamlit Pages (`pages/`) |
-| Member 4 | Integration (`app.py`, `utils/`, `components/`) |
