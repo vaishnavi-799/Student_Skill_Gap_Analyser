@@ -3,7 +3,6 @@ import os
 
 os.makedirs("data", exist_ok=True)
 
-# ── 1. skills.csv ──
 skills = [
     # CSE
     {"skill_id":"SK001","skill_name":"Data Structures","department":"CSE","category":"Core CS"},
@@ -52,9 +51,7 @@ skills = [
     {"skill_id":"SK040","skill_name":"Quality Control","department":"CHEM","category":"QA"},
 ]
 pd.DataFrame(skills).to_csv("data/skills.csv", index=False)
-print("✅ skills.csv created")
 
-# ── 2. skill_topics.csv ──
 topics = [
     # Data Structures (SK001)
     {"topic_id":"TP001","skill_id":"SK001","topic_name":"Arrays & Strings","difficulty_weight":1},
@@ -96,9 +93,7 @@ topics = [
     {"topic_id":"TP031","skill_id":"SK036","topic_name":"Reactor Design","difficulty_weight":3},
 ]
 pd.DataFrame(topics).to_csv("data/skill_topics.csv", index=False)
-print("✅ skill_topics.csv created")
 
-# ── 3. job_roles.csv ──
 roles = [
     {"role_id":"JR001","role_name":"Software Developer","department":"CSE","required_skill_ids":"SK001,SK002,SK003,SK004,SK007","benchmark_scores":"8,7,7,6,7"},
     {"role_id":"JR002","role_name":"Data Scientist","department":"CSE","required_skill_ids":"SK007,SK008,SK009,SK010,SK004","benchmark_scores":"8,8,7,7,6"},
@@ -120,9 +115,7 @@ roles = [
     {"role_id":"JR018","role_name":"R&D Chemist","department":"CHEM","required_skill_ids":"SK039,SK036,SK040,SK037,SK038","benchmark_scores":"8,7,6,5,5"},
 ]
 pd.DataFrame(roles).to_csv("data/job_roles.csv", index=False)
-print("✅ job_roles.csv created")
 
-# ── 4. students.csv ──
 import random
 random.seed(42)
 
@@ -157,9 +150,7 @@ for i in range(50):
         "num_backlogs":       random.randint(0, 3),
     })
 pd.DataFrame(students).to_csv("data/students.csv", index=False)
-print("✅ students.csv created")
 
-# ── 5. student_skill_scores.csv ──
 score_rows = []
 skill_dept = {"CSE":["SK001","SK002","SK007","SK008","SK010"],
               "ECE":["SK017","SK018","SK019","SK021","SK022"],
@@ -175,9 +166,7 @@ for stu in students:
             "topics_known_count": random.randint(1, 4),
         })
 pd.DataFrame(score_rows).to_csv("data/student_skill_scores.csv", index=False)
-print("✅ student_skill_scores.csv created")
 
-# ── 6. student_applications.csv ──
 apps = []
 for stu in students:
     cgpa      = stu["cgpa"]
@@ -218,11 +207,7 @@ for stu in students:
         "placed":                      placed,
     })
 pd.DataFrame(apps).to_csv("data/student_applications.csv", index=False)
-print("✅ student_applications.csv created")
 
-print("\n🎉 All 6 CSV files created in data/ folder!")
-print("\nFiles created:")
 import os
 for f in os.listdir("data"):
     size = os.path.getsize(f"data/{f}")
-    print(f"  📄 {f} ({size} bytes)")

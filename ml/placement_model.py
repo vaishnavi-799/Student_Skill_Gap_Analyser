@@ -8,11 +8,9 @@ import pickle
 import os
 from config.supabase_client import get_supabase
 
-# Path to save trained model
 MODEL_PATH  = "ml/placement_model.pkl"
 SCALER_PATH = "ml/scaler.pkl"
 
-# Features used for training
 FEATURES = [
     "skill_match_score",
     "cosine_similarity",
@@ -59,7 +57,6 @@ def train_placement_model(save: bool = True):
     """
     df = load_training_data()
 
-    # Check all required columns exist
     missing = [f for f in FEATURES + ["placed"] if f not in df.columns]
     if missing:
         raise ValueError(f"Missing columns in training data: {missing}")
@@ -67,33 +64,28 @@ def train_placement_model(save: bool = True):
     X = df[FEATURES].fillna(0)
     y = df["placed"]
 
-    # Min-Max normalization
     scaler  = MinMaxScaler()
     X_scaled = scaler.fit_transform(X)
 
-    # Train/test split
     X_train, X_test, y_train, y_test = train_test_split(
         X_scaled, y, test_size=0.2, random_state=42, stratify=y
     )
 
-    # Random Forest
     model = RandomForestClassifier(
         n_estimators=100,
         max_depth=8,
         min_samples_split=4,
         random_state=42,
-        class_weight="balanced",  # handles class imbalance
+        class_weight="balanced", 
     )
     model.fit(X_train, y_train)
 
-    # Evaluate
     y_pred   = model.predict(X_test)
     accuracy = accuracy_score(y_test, y_pred)
     print(f"\n📊 Random Forest Accuracy: {accuracy * 100:.1f}%")
     print("\nClassification Report:")
     print(classification_report(y_test, y_pred, target_names=["Not Placed", "Placed"]))
 
-    # Feature importance
     print("\n🔍 Feature Importance:")
     for feat, imp in sorted(zip(FEATURES, model.feature_importances_),
                             key=lambda x: x[1], reverse=True):
@@ -167,7 +159,5 @@ def predict_placement(
     return round(float(probability), 4)
 
 
-# ── Run this directly to train: python -m ml.placement_model ──
 if __name__ == "__main__":
-    print("🚀 Training placement model...")
     train_placement_model(save=True)

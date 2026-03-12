@@ -23,10 +23,6 @@ def normalize_features(features: list, feature_min: list, feature_max: list) -> 
     return normalized
 
 
-# ══════════════════════════════════════════════════════
-#  REQUIREMENT 3 — Domain-aware credential scoring
-# ══════════════════════════════════════════════════════
-
 def score_credentials(role_name: str,
                       projects: list,
                       certifications: list,
@@ -57,7 +53,6 @@ def score_credentials(role_name: str,
         for item in items:
             rel = get_domain_relevance(item.get(domain_key, "General / Other"), role_name)
             if months_key:
-                # Internship: longer duration = more weight, capped at 6 months
                 duration_factor = min(item.get(months_key, 1) / 6, 1.0)
                 scores.append(rel * duration_factor * weight)
             else:
@@ -76,10 +71,6 @@ def score_credentials(role_name: str,
         "backlog_penalty":  backlog_penalty,
     }
 
-
-# ══════════════════════════════════════════════════════
-#  FINAL READINESS FORMULA (Req 1 + Req 2 + Req 3)
-# ══════════════════════════════════════════════════════
 
 def compute_readiness(
     student_scores: dict,
@@ -104,19 +95,14 @@ def compute_readiness(
 
     Returns dict with final score + each component.
     """
-    # Component 1 — Topic-weighted skill match (0–1)
     s_match = skill_match_score(student_scores, role_id)
 
-    # Component 2 — CGPA (0–1)
     cgpa_score = round(min(1.0, cgpa / 10.0), 4)
 
-    # Component 3 — College tier (Req 1)
     tier_score = TIER_WEIGHT.get(int(college_tier), 0.60)
 
-    # Component 4,5,6,7 — Domain-aware credentials (Req 3)
     cred = score_credentials(role_name, projects, certifications, internships, backlogs)
 
-    # Weighted sum → scale to 100
     readiness = (
         s_match                      * 0.45 * 100 +
         cgpa_score                   * 0.12 * 100 +

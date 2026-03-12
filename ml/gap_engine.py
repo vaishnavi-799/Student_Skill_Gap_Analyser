@@ -1,10 +1,8 @@
 import numpy as np
 from config.supabase_client import get_supabase
 
-# ── College tier weights (Requirement 1) ──
 TIER_WEIGHT = {1: 1.00, 2: 0.85, 3: 0.70, 4: 0.60, 5: 0.45}
 
-# ── Domain relevance table (Requirement 3) ──
 DOMAIN_RELEVANCE = {
     "Python":                {"Data Scientist": 1.0, "ML Engineer": 1.0, "Software Developer": 0.7,
                               "Web Developer": 0.5, "DevOps Engineer": 0.6, "default": 0.3},
@@ -43,10 +41,6 @@ def get_domain_relevance(domain: str, role_name: str) -> float:
     return dr.get(role_name, dr.get("default", 0.3))
 
 
-# ══════════════════════════════════════════════════════
-#  REQUIREMENT 2 — Topic-weighted skill score
-# ══════════════════════════════════════════════════════
-
 def compute_topic_skill_score(topics: list, known_indices: list) -> float:
     """
     topics        : list of dicts  [{"topic_name": ..., "difficulty_weight": 1/2/3}, ...]
@@ -61,10 +55,6 @@ def compute_topic_skill_score(topics: list, known_indices: list) -> float:
     known_weight = sum(topics[i]["difficulty_weight"] for i in known_indices if i < len(topics))
     return round((known_weight / total_weight) * 10, 2) if total_weight > 0 else 0.0
 
-
-# ══════════════════════════════════════════════════════
-#  GAP COMPUTATION
-# ══════════════════════════════════════════════════════
 
 def compute_gaps(student_scores: dict, role_id: str) -> dict:
     """
@@ -86,7 +76,6 @@ def compute_gaps(student_scores: dict, role_id: str) -> dict:
     """
     supabase = get_supabase()
 
-    # Fetch role details
     role_resp = supabase.table("job_roles") \
                         .select("*") \
                         .eq("role_id", role_id) \
@@ -98,7 +87,6 @@ def compute_gaps(student_scores: dict, role_id: str) -> dict:
     skill_ids  = role["required_skill_ids"].split(",")
     benchmarks = list(map(int, role["benchmark_scores"].split(",")))
 
-    # Fetch skill names
     skills_resp = supabase.table("skills") \
                           .select("skill_id, skill_name") \
                           .in_("skill_id", skill_ids) \
