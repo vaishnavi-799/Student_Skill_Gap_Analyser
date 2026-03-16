@@ -10,7 +10,6 @@ from config.supabase_client import get_supabase
 
 MODEL_PATH  = "ml/placement_model.pkl"
 SCALER_PATH = "ml/scaler.pkl"
-
 FEATURES = [
     "skill_match_score",
     "cosine_similarity",

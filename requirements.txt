@@ -1,7 +1,7 @@
-streamlit==1.32.0
-supabase==2.4.0
-pandas==2.2.0
-numpy==1.26.0
-scikit-learn==1.4.0
-plotly==5.19.0
-python-dotenv==1.0.0
+streamlit
+supabase
+pandas
+numpy
+scikit-learn
+plotly
+python-dotenv
