@@ -1,107 +1,89 @@
 import streamlit as st
 from utils.auth import require_login
-from utils.domain_relevance import ALL_DOMAINS
-from utils.helpers import save_student_profile
+from utils.helpers import get_role_skills, get_topics_for_skill, save_skill_scores
+from ml.gap_engine import compute_topic_skill_score
 
 require_login()
-st.title("📋 Domain-aware Credentials")
-st.markdown("Add your projects, certifications, internships and backlogs with domain tags.")
+
+st.title("🛠️ Skill Assessment")
+st.caption("Tick only topics you genuinely know. Score is auto-calculated from topic weights.")
 st.markdown("---")
 
-st.info("💡 The domain of each credential is matched against your target role. A Python project boosts a Data Science readiness more than an unrelated one.")
+role_id = st.session_state.get("target_role_id")
+if not role_id:
+    st.warning("⚠️ Complete your Profile first.")
+    st.stop()
 
-# ── Projects ──
-st.subheader("📁 Projects")
-if "projects" not in st.session_state:
-    st.session_state.projects = [{"title": "", "domain": "General / Other"}]
+role_skills = get_role_skills(role_id)
+if not role_skills:
+    st.error("Could not load skills for this role.")
+    st.stop()
 
-for i, proj in enumerate(st.session_state.projects):
-    c1, c2, c3 = st.columns([3, 2, 0.5])
-    st.session_state.projects[i]["title"]  = c1.text_input("Title",  value=proj["title"],  key=f"pt_{i}", label_visibility="collapsed", placeholder="Project title")
-    st.session_state.projects[i]["domain"] = c2.selectbox("Domain", ALL_DOMAINS, index=ALL_DOMAINS.index(proj["domain"]), key=f"pd_{i}", label_visibility="collapsed")
-    if c3.button("✕", key=f"pr_{i}") and len(st.session_state.projects) > 1:
-        st.session_state.projects.pop(i); st.rerun()
+if "topic_checks" not in st.session_state:
+    st.session_state.topic_checks = {}
 
-if st.button("＋ Add Project"):
-    st.session_state.projects.append({"title": "", "domain": "General / Other"}); st.rerun()
+skill_scores = {}
+total_match  = 0
+skill_count  = len(role_skills)
 
+for skill_name, info in role_skills.items():
+    skill_id = info["skill_id"]
+    bench    = info["benchmark"]
+    topics   = get_topics_for_skill(skill_id)
+
+    if skill_id not in st.session_state.topic_checks:
+        st.session_state.topic_checks[skill_id] = [False] * len(topics)
+
+    known_idx = [i for i, v in enumerate(st.session_state.topic_checks[skill_id]) if v]
+    score     = compute_topic_skill_score(topics, known_idx)
+    skill_scores[skill_id] = score
+    total_match += min(1.0, score / bench) if bench > 0 else 1.0
+
+avg_match = (total_match / skill_count * 100) if skill_count > 0 else 0
+
+col1, col2, col3 = st.columns(3)
+col1.metric("Skills to Assess", skill_count)
+col2.metric("Avg Coverage",     f"{avg_match:.1f}%")
+col3.metric("Target Role",      st.session_state.get("target_role_name", "—"))
+
+st.progress(avg_match / 100, text=f"Overall skill coverage: {avg_match:.1f}%")
 st.markdown("---")
 
-# ── Certifications ──
-st.subheader("📜 Certifications")
-if "certifications" not in st.session_state:
-    st.session_state.certifications = [{"name": "", "domain": "General / Other"}]
+for skill_name, info in role_skills.items():
+    skill_id = info["skill_id"]
+    bench    = info["benchmark"]
+    topics   = get_topics_for_skill(skill_id)
+    score    = skill_scores[skill_id]
+    pct      = int((score / bench) * 100) if bench > 0 else 0
+    color    = "🟢" if pct >= 75 else "🟡" if pct >= 40 else "🔴"
 
-for i, cert in enumerate(st.session_state.certifications):
-    c1, c2, c3 = st.columns([3, 2, 0.5])
-    st.session_state.certifications[i]["name"]   = c1.text_input("Name",  value=cert["name"],   key=f"cn_{i}", label_visibility="collapsed", placeholder="Certification name")
-    st.session_state.certifications[i]["domain"]  = c2.selectbox("Domain", ALL_DOMAINS, index=ALL_DOMAINS.index(cert["domain"]), key=f"cd_{i}", label_visibility="collapsed")
-    if c3.button("✕", key=f"cr_{i}") and len(st.session_state.certifications) > 1:
-        st.session_state.certifications.pop(i); st.rerun()
+    with st.expander(f"{color} **{skill_name}** — {score:.1f}/10  |  Required: {bench}/10  |  Coverage: {pct}%"):
+        st.progress(min(pct, 100) / 100)
+        if topics:
+            st.caption("Tick topics you know:")
+            cols = st.columns(3)
+            for i, topic in enumerate(topics):
+                w_label = {1: "Basic", 2: "Intermediate", 3: "Advanced"}.get(topic["difficulty_weight"], "")
+                checked = cols[i % 3].checkbox(
+                    f"{topic['topic_name']} ({w_label})",
+                    value=st.session_state.topic_checks[skill_id][i],
+                    key=f"t_{skill_id}_{i}"
+                )
+                st.session_state.topic_checks[skill_id][i] = checked
+        else:
+            st.info("No subtopics defined for this skill.")
 
-if st.button("＋ Add Certification"):
-    st.session_state.certifications.append({"name": "", "domain": "General / Other"}); st.rerun()
-
+st.session_state.skill_scores = skill_scores
 st.markdown("---")
 
-# ── Internships ──
-st.subheader("🏢 Internships")
-if "internships" not in st.session_state:
-    st.session_state.internships = [{"company": "", "domain": "General / Other", "months": 2}]
-
-for i, intern in enumerate(st.session_state.internships):
-    c1, c2, c3, c4 = st.columns([2, 2, 1, 0.5])
-    st.session_state.internships[i]["company"] = c1.text_input("Company", value=intern["company"], key=f"ic_{i}", label_visibility="collapsed", placeholder="Company name")
-    st.session_state.internships[i]["domain"]  = c2.selectbox("Domain", ALL_DOMAINS, index=ALL_DOMAINS.index(intern["domain"]), key=f"id_{i}", label_visibility="collapsed")
-    st.session_state.internships[i]["months"]  = c3.number_input("Months", min_value=1, max_value=24, value=intern["months"], key=f"im_{i}", label_visibility="collapsed")
-    if c4.button("✕", key=f"ir_{i}") and len(st.session_state.internships) > 1:
-        st.session_state.internships.pop(i); st.rerun()
-
-if st.button("＋ Add Internship"):
-    st.session_state.internships.append({"company": "", "domain": "General / Other", "months": 2}); st.rerun()
-
-st.markdown("---")
-
-# ── Backlogs ──
-st.subheader("⚠️ Backlogs")
-st.caption("Domain-relevant backlogs are penalised more heavily in the readiness formula.")
-if "backlogs" not in st.session_state:
-    st.session_state.backlogs = []
-
-for i, bl in enumerate(st.session_state.backlogs):
-    c1, c2, c3 = st.columns([3, 2, 0.5])
-    st.session_state.backlogs[i]["subject"] = c1.text_input("Subject", value=bl["subject"], key=f"bs_{i}", label_visibility="collapsed", placeholder="Subject name")
-    st.session_state.backlogs[i]["domain"]  = c2.selectbox("Domain", ALL_DOMAINS, index=ALL_DOMAINS.index(bl["domain"]), key=f"bd_{i}", label_visibility="collapsed")
-    if c3.button("✕", key=f"br_{i}"):
-        st.session_state.backlogs.pop(i); st.rerun()
-
-if st.button("＋ Add Backlog"):
-    st.session_state.backlogs.append({"subject": "", "domain": "General / Other"}); st.rerun()
-
-st.markdown("---")
-
-if st.button("🔍 Analyze Skill Gap →", use_container_width=True):
-    # Save credentials to session state for analysis
-    st.session_state.cred_projects       = [p for p in st.session_state.projects       if p.get("title")]
-    st.session_state.cred_certifications = [c for c in st.session_state.certifications if c.get("name")]
-    st.session_state.cred_internships    = [i for i in st.session_state.internships    if i.get("company")]
-    st.session_state.cred_backlogs       = [b for b in st.session_state.backlogs       if b.get("subject")]
-
-    # Update student profile with credential counts
-    profile = st.session_state.get("profile", {})
-    profile.update({
-        "student_id":         st.session_state.student_id,
-        "num_projects":       len(st.session_state.cred_projects),
-        "project_domains":    ",".join(p["domain"] for p in st.session_state.cred_projects),
-        "num_certifications": len(st.session_state.cred_certifications),
-        "cert_domains":       ",".join(c["domain"] for c in st.session_state.cred_certifications),
-        "num_internships":    len(st.session_state.cred_internships),
-        "internship_domains": ",".join(i["domain"] for i in st.session_state.cred_internships),
-        "internship_months":  ",".join(str(i["months"]) for i in st.session_state.cred_internships),
-        "num_backlogs":       len(st.session_state.cred_backlogs),
-        "backlog_domains":    ",".join(b["domain"] for b in st.session_state.cred_backlogs),
-    })
-    save_student_profile(profile)
-    st.success("✅ Credentials saved! Go to Gap Analysis page.")
-
-
+if st.button("💾 Save Skills & Go to Credentials →", use_container_width=True):
+    scores_list = [
+        {
+            "skill_id":           sk,
+            "skill_score":        sc,
+            "topics_known_count": sum(st.session_state.topic_checks.get(sk, []))
+        }
+        for sk, sc in skill_scores.items()
+    ]
+    if save_skill_scores(st.session_state.student_id, scores_list):
+        st.success("✅ Skills saved! Go to Credentials page from the sidebar.")

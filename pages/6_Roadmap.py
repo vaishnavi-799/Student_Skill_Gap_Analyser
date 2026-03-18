@@ -2,13 +2,13 @@ import streamlit as st
 from utils.auth import require_login
 
 require_login()
-st.title("🚀 Personalized Upskilling Roadmap")
+st.title(" Personalized Upskilling Roadmap")
 st.markdown("Priority-ranked by gap severity and domain relevance.")
 st.markdown("---")
 
 roadmap = st.session_state.get("roadmap", [])
 if not roadmap:
-    st.warning("⚠️ Please run Gap Analysis first.")
+    st.warning(" Please run Gap Analysis first.")
     st.stop()
 
 total_weeks = sum(r["weeks"] for r in roadmap)

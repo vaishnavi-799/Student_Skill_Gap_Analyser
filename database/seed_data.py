@@ -30,4 +30,4 @@ if __name__ == "__main__":
     seed("skill_topics", "data/skill_topics.csv")
     seed("job_roles", "data/job_roles.csv")
     seed("students", "data/students.csv")
-
+    seed("student_applications", "data/student_applications.csv")

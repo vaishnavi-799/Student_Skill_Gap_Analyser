@@ -1,0 +1,52 @@
+topic_id,skill_id,topic_name,difficulty_weight
+TP001,SK001,Arrays & Strings,1
+TP002,SK001,Linked Lists,1
+TP003,SK001,Stacks & Queues,1
+TP004,SK001,Trees & Graphs,2
+TP005,SK001,Dynamic Programming,3
+TP006,SK007,Syntax & Basics,1
+TP007,SK007,OOP in Python,2
+TP008,SK007,File Handling,1
+TP009,SK007,Pandas & NumPy,2
+TP010,SK007,Decorators & Generators,3
+TP011,SK008,Linear Regression,1
+TP012,SK008,Classification Algorithms,2
+TP013,SK008,Model Evaluation,2
+TP014,SK008,Feature Engineering,2
+TP015,SK008,Ensemble Methods,3
+TP016,SK018,GPIO & Interrupts,1
+TP017,SK018,UART/SPI/I2C,2
+TP018,SK018,PWM & Timers,2
+TP019,SK018,RTOS Basics,3
+TP020,SK025,2D Drafting,1
+TP021,SK025,3D Part Modelling,2
+TP022,SK025,Assembly Design,2
+TP023,SK025,GD&T,3
+TP024,SK031,Truss Analysis,1
+TP025,SK031,Beam Design,2
+TP026,SK031,Column Design,2
+TP027,SK031,Seismic Analysis,3
+TP028,SK036,Mass & Energy Balance,1
+TP029,SK036,Heat Exchangers,2
+TP030,SK036,Distillation,2
+TP031,SK036,Reactor Design,3
+TP032,SK002,Sorting Algorithms,1
+TP033,SK002,Searching Algorithms,1
+TP034,SK002,Graph Algorithms,2
+TP035,SK002,Greedy Algorithms,2
+TP036,SK002,Divide & Conquer,3
+TP037,SK003,Classes & Objects,1
+TP038,SK003,Inheritance,1
+TP039,SK003,Polymorphism,2
+TP040,SK003,Abstraction,2
+TP041,SK003,Design Patterns,3
+TP042,SK004,ER Diagrams,1
+TP043,SK004,Normalization,2
+TP044,SK004,SQL Queries,1
+TP045,SK004,Transactions & ACID,2
+TP046,SK004,Indexing & Query Optimization,3
+TP047,SK009,Neural Networks Basics,1
+TP048,SK009,CNNs,2
+TP049,SK009,RNNs & LSTMs,2
+TP050,SK009,Transfer Learning,3
+TP051,SK009,Transformers,3

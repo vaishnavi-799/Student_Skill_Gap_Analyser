@@ -123,14 +123,14 @@ if st.button("🔍 Run Analysis", use_container_width=True) or st.session_state.
             gauge  = {
                 "axis":  {"range":[0,100],"tickcolor":"#5a7090"},
                 "bar":   {"color":"#00e5c3"},
-                "bgcolor":"#0e1420",
+                "bgcolor":"#dce8f5",
                 "steps": [{"range":[0,40],"color":"rgba(255,69,96,0.2)"},
                            {"range":[40,70],"color":"rgba(255,200,55,0.2)"},
                            {"range":[70,100],"color":"rgba(0,229,195,0.15)"}],
                 "threshold":{"line":{"color":"white","width":3},"value":70},
             }
         ))
-        gauge.update_layout(paper_bgcolor="#070b14", font_color="#dce8f5", height=300, margin=dict(t=30,b=10))
+        gauge.update_layout(paper_bgcolor="#dce8f5", font_color="#dce8f5", height=300, margin=dict(t=30,b=10))
         st.plotly_chart(gauge, use_container_width=True)
 
         label = ("🟢 Highly Ready" if readiness>=70 else "🟡 Moderately Ready" if readiness>=50 else "🔴 Significant Gaps")
@@ -141,15 +141,18 @@ if st.button("🔍 Run Analysis", use_container_width=True) or st.session_state.
 
     # ── Gap Table ──
     st.subheader("🔍 Skill-by-Skill Breakdown")
-    rows = []
-    for skill, info in gaps.items():
-        status = "✅ Met" if info["gap"]==0 else "⚠️ Close" if info["gap"]<=2 else "❌ Gap"
-        rows.append({
-            "Skill":       skill,
-            "Your Score":  f"{info['student']:.1f}/10",
-            "Required":    f"{info['required']}/10",
-            "Gap":         f"-{info['gap']:.1f}" if info["gap"]>0 else f"+{info['surplus']:.1f}",
-            "Match":       f"{info['match_pct']}%",
-            "Status":      status,
-        })
-    st.dataframe(rows, use_container_width=True, hide_index=True)
+    if gaps:
+        rows = []
+        for skill, info in gaps.items():
+            status = "✅ Met" if info["gap"]==0 else "⚠️ Close" if info["gap"]<=2 else "❌ Gap"
+            rows.append({
+                "Skill":        skill,
+                "Your Score":   f"{info['student']:.1f}/10",
+                "Required":     f"{info['required']}/10",
+                "Gap":          f"-{info['gap']:.1f}" if info["gap"]>0 else f"+{info['surplus']:.1f}",
+                "Match %":      f"{info['match_pct']}%",
+                "Status":       status,
+            })
+        st.dataframe(rows, use_container_width=True, hide_index=True)
+    else:
+        st.warning("Run analysis first to see breakdown.")

@@ -91,7 +91,32 @@ topics = [
     {"topic_id":"TP029","skill_id":"SK036","topic_name":"Heat Exchangers","difficulty_weight":2},
     {"topic_id":"TP030","skill_id":"SK036","topic_name":"Distillation","difficulty_weight":2},
     {"topic_id":"TP031","skill_id":"SK036","topic_name":"Reactor Design","difficulty_weight":3},
-]
+    # Add these to your topics list in create_datasets.py
+# Algorithms (SK002)
+{"topic_id":"TP032","skill_id":"SK002","topic_name":"Sorting Algorithms","difficulty_weight":1},
+{"topic_id":"TP033","skill_id":"SK002","topic_name":"Searching Algorithms","difficulty_weight":1},
+{"topic_id":"TP034","skill_id":"SK002","topic_name":"Graph Algorithms","difficulty_weight":2},
+{"topic_id":"TP035","skill_id":"SK002","topic_name":"Greedy Algorithms","difficulty_weight":2},
+{"topic_id":"TP036","skill_id":"SK002","topic_name":"Divide & Conquer","difficulty_weight":3},
+# OOP Concepts (SK003)
+{"topic_id":"TP037","skill_id":"SK003","topic_name":"Classes & Objects","difficulty_weight":1},
+{"topic_id":"TP038","skill_id":"SK003","topic_name":"Inheritance","difficulty_weight":1},
+{"topic_id":"TP039","skill_id":"SK003","topic_name":"Polymorphism","difficulty_weight":2},
+{"topic_id":"TP040","skill_id":"SK003","topic_name":"Abstraction","difficulty_weight":2},
+{"topic_id":"TP041","skill_id":"SK003","topic_name":"Design Patterns","difficulty_weight":3},
+# DBMS (SK004)
+{"topic_id":"TP042","skill_id":"SK004","topic_name":"ER Diagrams","difficulty_weight":1},
+{"topic_id":"TP043","skill_id":"SK004","topic_name":"Normalization","difficulty_weight":2},
+{"topic_id":"TP044","skill_id":"SK004","topic_name":"SQL Queries","difficulty_weight":1},
+{"topic_id":"TP045","skill_id":"SK004","topic_name":"Transactions & ACID","difficulty_weight":2},
+{"topic_id":"TP046","skill_id":"SK004","topic_name":"Indexing & Query Optimization","difficulty_weight":3},
+# Deep Learning (SK009)
+{"topic_id":"TP047","skill_id":"SK009","topic_name":"Neural Networks Basics","difficulty_weight":1},
+{"topic_id":"TP048","skill_id":"SK009","topic_name":"CNNs","difficulty_weight":2},
+{"topic_id":"TP049","skill_id":"SK009","topic_name":"RNNs & LSTMs","difficulty_weight":2},
+{"topic_id":"TP050","skill_id":"SK009","topic_name":"Transfer Learning","difficulty_weight":3},
+{"topic_id":"TP051","skill_id":"SK009","topic_name":"Transformers","difficulty_weight":3},
+]   
 pd.DataFrame(topics).to_csv("data/skill_topics.csv", index=False)
 
 roles = [

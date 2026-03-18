@@ -1,0 +1,41 @@
+skill_id,skill_name,department,category
+SK001,Data Structures,CSE,Core CS
+SK002,Algorithms,CSE,Core CS
+SK003,OOP Concepts,CSE,Core CS
+SK004,DBMS,CSE,Core CS
+SK005,OS Concepts,CSE,Core CS
+SK006,Computer Networks,CSE,Core CS
+SK007,Python,CSE,Programming
+SK008,Machine Learning,CSE,AI/ML
+SK009,Deep Learning,CSE,AI/ML
+SK010,SQL,CSE,Database
+SK011,HTML/CSS,CSE,Web
+SK012,JavaScript,CSE,Web
+SK013,React/Vue,CSE,Web
+SK014,Docker,CSE,DevOps
+SK015,Linux/Unix,CSE,DevOps
+SK016,System Design,CSE,Architecture
+SK017,C/C++ Programming,ECE,Programming
+SK018,Microcontrollers,ECE,Embedded
+SK019,VLSI Design,ECE,VLSI
+SK020,Verilog/VHDL,ECE,VLSI
+SK021,Circuit Design,ECE,Electronics
+SK022,Signal Processing,ECE,DSP
+SK023,MATLAB,ECE,Tools
+SK024,PCB Design,ECE,Hardware
+SK025,CAD (SolidWorks/AutoCAD),MECH,Design
+SK026,FEA (ANSYS),MECH,Simulation
+SK027,Thermodynamics,MECH,Core
+SK028,Fluid Mechanics,MECH,Core
+SK029,Strength of Materials,MECH,Core
+SK030,Manufacturing Processes,MECH,Manufacturing
+SK031,Structural Analysis,CIVIL,Core
+SK032,RCC Design,CIVIL,Design
+SK033,AutoCAD/STAAD Pro,CIVIL,Tools
+SK034,Soil Mechanics,CIVIL,Geotechnical
+SK035,Surveying,CIVIL,Field
+SK036,Chemical Process Design,CHEM,Core
+SK037,Process Simulation (Aspen),CHEM,Tools
+SK038,Safety & HAZOP,CHEM,Safety
+SK039,Organic Chemistry,CHEM,Core
+SK040,Quality Control,CHEM,QA
