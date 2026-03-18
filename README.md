@@ -59,6 +59,13 @@ Run the schema in Supabase SQL Editor:
 # Copy contents of database/schema.sql and run in Supabase dashboard
 ```
 
+
+
+### 6. Generate datasets
+```bash
+python data/create_datasets.py
+```
+
 ### 6. Seed the data
 ```bash
 python database/seed_data.py
